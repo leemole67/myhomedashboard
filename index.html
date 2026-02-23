@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Home Dashboard</title>
+  <style>
+    /* ── Reset & base ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:          #0f1117;
+      --surface:     #1a1d27;
+      --surface-2:   #22263a;
+      --border:      rgba(255,255,255,0.07);
+      --text:        #e8eaf0;
+      --text-muted:  #7a7f99;
+
+      --housing:     #3b82f6;
+      --utilities:   #10b981;
+      --media:       #8b5cf6;
+      --finance:     #f59e0b;
+
+      --housing-glow:   rgba(59,130,246,0.18);
+      --utilities-glow: rgba(16,185,129,0.18);
+      --media-glow:     rgba(139,92,246,0.18);
+      --finance-glow:   rgba(245,158,11,0.18);
+
+      --radius: 14px;
+      --card-radius: 12px;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+                   "Helvetica Neue", Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 0 0 60px;
+    }
+
+    /* ── Header ── */
+    header {
+      background: linear-gradient(135deg, #1a1d27 0%, #0f1117 100%);
+      border-bottom: 1px solid var(--border);
+      padding: 28px 32px 24px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    header .logo {
+      width: 44px; height: 44px;
+      background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px;
+      flex-shrink: 0;
+    }
+
+    header h1 {
+      font-size: 1.55rem;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+    }
+
+    header p {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    /* ── Main layout ── */
+    main {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 36px 24px 0;
+      display: flex;
+      flex-direction: column;
+      gap: 36px;
+    }
+
+    /* ── Section ── */
+    .section-label {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .section-label .dot {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .section-label h2 {
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    .section-label .count {
+      font-size: 0.72rem;
+      font-weight: 600;
+      padding: 1px 7px;
+      border-radius: 20px;
+      background: var(--surface-2);
+      color: var(--text-muted);
+    }
+
+    /* ── Grid ── */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 14px;
+    }
+
+    /* ── Card ── */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--card-radius);
+      padding: 20px 18px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      text-decoration: none;
+      color: inherit;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.18s ease, border-color 0.18s ease,
+                  box-shadow 0.18s ease, background 0.18s ease;
+      cursor: pointer;
+    }
+
+    /* subtle top accent line */
+    .card::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: var(--accent);
+      opacity: 0;
+      transition: opacity 0.18s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-3px);
+      border-color: rgba(255,255,255,0.14);
+      background: var(--surface-2);
+      box-shadow: 0 8px 28px var(--glow);
+    }
+
+    .card:hover::before { opacity: 1; }
+
+    /* accent colours per section */
+    .housing  .card, .card.housing  { --accent: var(--housing);  --glow: var(--housing-glow);  }
+    .utilities .card,.card.utilities { --accent: var(--utilities); --glow: var(--utilities-glow); }
+    .media    .card, .card.media    { --accent: var(--media);    --glow: var(--media-glow);    }
+    .finance  .card, .card.finance  { --accent: var(--finance);  --glow: var(--finance-glow);  }
+
+    .housing .dot  { background: var(--housing);  }
+    .utilities .dot{ background: var(--utilities); }
+    .media .dot    { background: var(--media);    }
+    .finance .dot  { background: var(--finance);  }
+
+    /* icon */
+    .card-icon {
+      width: 42px; height: 42px;
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px;
+      background: var(--icon-bg, rgba(255,255,255,0.06));
+      flex-shrink: 0;
+    }
+
+    .housing  .card-icon { background: rgba(59,130,246,0.15);  }
+    .utilities .card-icon{ background: rgba(16,185,129,0.15);  }
+    .media    .card-icon { background: rgba(139,92,246,0.15);  }
+    .finance  .card-icon { background: rgba(245,158,11,0.15);  }
+
+    /* card body */
+    .card-body { flex: 1; }
+
+    .card-title {
+      font-size: 0.95rem;
+      font-weight: 600;
+      line-height: 1.3;
+    }
+
+    .card-sub {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 3px;
+    }
+
+    /* arrow indicator */
+    .card-arrow {
+      align-self: flex-end;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      transition: color 0.18s ease, transform 0.18s ease;
+    }
+
+    .card:hover .card-arrow {
+      color: var(--accent);
+      transform: translateX(3px);
+    }
+
+    /* ── Footer ── */
+    footer {
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.75rem;
+      margin-top: 50px;
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 600px) {
+      header { padding: 20px 18px 16px; }
+      main   { padding: 24px 14px 0; }
+      header h1 { font-size: 1.25rem; }
+      .grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+    }
+
+    @media (max-width: 380px) {
+      .grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="logo">🏠</div>
+  <div>
+    <h1>My Home Dashboard</h1>
+    <p>Quick access to all your household accounts</p>
+  </div>
+</header>
+
+<main>
+
+  <!-- ── HOUSING ── -->
+  <section class="housing">
+    <div class="section-label">
+      <span class="dot"></span>
+      <h2>Housing</h2>
+      <span class="count">2</span>
+    </div>
+    <div class="grid">
+
+      <a class="card" href="#mortgage" title="Mortgage account">
+        <div class="card-icon">🏦</div>
+        <div class="card-body">
+          <div class="card-title">Mortgage</div>
+          <div class="card-sub">Home loan account</div>
+        </div>
+        <span class="card-arrow">→</span>
+      </a>
+
+      <a class="card" href="https://www.gov.uk/pay-council-tax" target="_blank" rel="noopener" title="Council Tax">
+        <div class="card-icon">🏛️</div>
+        <div class="card-body">
+          <div class="card-title">Council Tax</div>
+          <div class="card-sub">Local authority</div>
+        </div>
+        <span class="card-arrow">→</span>
+      </a>
+
+    </div>
+  </section>
+
+  <!-- ── UTILITIES ── -->
+  <section class="utilities">
+    <div class="section-label">
+      <span class="dot"></span>
+      <h2>Utilities</h2>
+      <span class="count">3</span>
+    </div>
+    <div class="grid">
+
+      <a class="card" href="#gas-electricity" title="Gas & Electricity">
+        <div class="card-icon">⚡</div>
+        <div class="card-body">
+          <div class="card-title">Gas &amp; Electricity</div>
+          <div class="card-sub">Energy supplier</div>
+        </div>
+        <span class="card-arrow">→</span>
+      </a>
+
+      <a class="card" href="#water" title="Water">
+        <div class="card-icon">💧</div>
+        <div class="card-body">
+          <div class="card-title">Water</div>
+          <div class="card-sub">Water supplier</div>
+        </div>
+        <span class="card-arrow">→</span>
+      </a>
+
+      <a class="card" href="#sewage" title="Sewage">
+        <div class="card-icon">🚰</div>
+        <div class="card-body">
+          <div class="card-title">Sewage</div>
+          <div class="card-sub">Wastewater services</div>
+        </div>
+        <span class="card-arrow">→</span>
+      </a>
+
+    </div>
+  </section>
+
+  <!-- ── MEDIA & ENTERTAINMENT ── -->
+  <section class="media">
+    <div class="section-label">
+      <span class="dot"></span>
+      <h2>Media &amp; Entertainment</h2>
+      <span class="count">3</span>
+    </div>
+    <div class="grid">
+
+      <a class="card" href="https://www.tvlicensing.co.uk" target="_blank" rel="noopener" title="TV Licence">
+        <div class="card-icon">📺</div>
+        <div class="card-body">
+          <div class="card-title">TV Licence</div>
+          <div class="card-sub">tvlicensing.co.uk</div>
+        </div>
+        <span class="card-arrow">→</span>
+      </a>
+
+      <a class="card" href="https://www.sky.com/shop/my-account" target="_blank" rel="noopener" title="Sky">
+        <div class="card-icon">🛸</div>
+        <div class="card-body">
+          <div class="card-title">Sky</div>
+          <div class="card-sub">sky.com</div>
+        </div>
+        <span class="card-arrow">→</span>
+      </a>
+
+      <a class="card" href="https://www.virginmedia.com/my-virgin-media" target="_blank" rel="noopener" title="Virgin Media">
+        <div class="card-icon">📡</div>
+        <div class="card-body">
+          <div class="card-title">Virgin Media</div>
+          <div class="card-sub">virginmedia.com</div>
+        </div>
+        <span class="card-arrow">→</span>
+      </a>
+
+    </div>
+  </section>
+
+  <!-- ── FINANCE ── -->
+  <section class="finance">
+    <div class="section-label">
+      <span class="dot"></span>
+      <h2>Finance</h2>
+      <span class="count">4</span>
+    </div>
+    <div class="grid">
+
+      <a class="card" href="#pension" title="Pension">
+        <div class="card-icon">🧓</div>
+        <div class="card-body">
+          <div class="card-title">Pension</div>
+          <div class="card-sub">Retirement fund</div>
+        </div>
+        <span class="card-arrow">→</span>
+      </a>
+
+      <a class="card" href="#bank-account" title="Bank Account">
+        <div class="card-icon">💳</div>
+        <div class="card-body">
+          <div class="card-title">Bank Account</div>
+          <div class="card-sub">Current account</div>
+        </div>
+        <span class="card-arrow">→</span>
+      </a>
+
+      <a class="card" href="#savings" title="Savings">
+        <div class="card-icon">🏧</div>
+        <div class="card-body">
+          <div class="card-title">Savings</div>
+          <div class="card-sub">Savings account</div>
+        </div>
+        <span class="card-arrow">→</span>
+      </a>
+
+      <a class="card" href="#investment" title="Investment">
+        <div class="card-icon">📈</div>
+        <div class="card-body">
+          <div class="card-title">Investment</div>
+          <div class="card-sub">Investment portfolio</div>
+        </div>
+        <span class="card-arrow">→</span>
+      </a>
+
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <p>Update the <code>href</code> links in <code>index.html</code> to point to your specific provider portals.</p>
+</footer>
+
+</body>
+</html>
