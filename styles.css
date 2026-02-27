@@ -1,0 +1,569 @@
+/* ----- global reset ----- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    width: 100%;
+    height: 100%;
+    background: #000000;
+    font-family: 'Inter', 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    overflow: hidden;
+}
+
+/* ----- main dashboard grid (3x3 with custom sizing) ----- */
+.dashboard {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #000000;
+    overflow: hidden;
+}
+
+.grid {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-columns: 25% 50% 25%;
+    grid-template-rows: auto 1fr auto;
+    gap: 4px;
+    background: #000000;
+    padding: 0;
+    overflow: hidden;
+}
+
+/* Base margin styling */
+.margin {
+    background: transparent;
+    color: #ffffff;
+}
+
+/* ----- TOP ROW ----- */
+.margin-top-left {
+    grid-column: 1 / 3;
+    grid-row: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    padding: 0.8rem 1rem;
+    background: transparent;
+    width: 100%;
+    overflow: hidden;
+}
+
+.margin-top-middle {
+    grid-column: 2;
+    grid-row: 1;
+    display: none;
+}
+
+.margin-top-right {
+    grid-column: 3;
+    grid-row: 1 / 3;
+    padding: 0.8rem;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    background: #000000;
+    border-radius: 24px;
+    margin: 6px;
+    border: 1px solid #333333;
+    backdrop-filter: blur(4px);
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.margin-top-right::-webkit-scrollbar {
+    display: none;
+}
+
+/* ----- MIDDLE ROW ----- */
+.margin-left-calendar {
+    grid-column: 1;
+    grid-row: 2 / 4;
+    background: #000000;
+    border-radius: 24px;
+    margin: 6px;
+    border: 1px solid #333333;
+    backdrop-filter: blur(4px);
+    padding: 0.6rem 0.6rem;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.margin-left-calendar::-webkit-scrollbar {
+    display: none;
+    width: 0;
+    background: transparent;
+}
+
+.margin-center-middle {
+    grid-column: 2;
+    grid-row: 2;
+    display: none;
+}
+
+.margin-right-middle {
+    grid-column: 3;
+    grid-row: 2;
+    display: none;
+}
+
+/* ----- BOTTOM ROW ----- */
+.margin-bottom-left, .margin-bottom-middle, .margin-bottom-right {
+    display: none;
+}
+
+.margin-bottom-merged {
+    grid-column: 1 / 4;
+    grid-row: 4;
+    background: #000000;
+    border-top: 1px solid #333333;
+    border-bottom: 1px solid #333333;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    position: relative;
+    padding: 4px 0;
+}
+
+/* Hide unused tile sections */
+.tile {
+    display: none;
+}
+
+/* ----- SCROLLING CLOCK ----- */
+.clock {
+    height: 14vh;
+    color: white;
+    font-size: 15vh;
+    font-family: 'Inter', 'SF Pro Display', 'Helvetica Neue', Arial, sans-serif;
+    font-weight: 700;
+    line-height: 14vh;
+    display: flex;
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 4px;
+    letter-spacing: -0.015em;
+    width: fit-content;
+    max-width: 100%;
+}
+
+.clock::before, .clock::after {
+    content: '';
+    width: 100%;
+    height: 2vh;
+    background: linear-gradient(to top, transparent, black);
+    position: absolute;
+    z-index: 10;
+    left: 0;
+    right: 0;
+    pointer-events: none;
+}
+
+.clock::after {
+    bottom: 0;
+    background: linear-gradient(to bottom, transparent, black);
+}
+
+.clock > div {
+    display: flex;
+    gap: 1px;
+    white-space: nowrap;
+    position: relative;
+}
+
+.hours, .minutes, .seconds {
+    display: flex;
+    gap: 1px;
+    white-space: nowrap;
+    position: relative;
+}
+
+.number {
+    font-weight: 700;
+    display: inline-block;
+    min-width: 0.58em;
+    text-align: center;
+    margin: 0 -0.375px;
+    white-space: nowrap;
+    position: relative;
+}
+
+.tick {
+    line-height: 12vh;
+    color: white;
+    font-weight: 700;
+    margin: 0 -0.03em;
+    padding: 0 0.75px;
+    white-space: nowrap;
+    position: relative;
+}
+
+.first, .second {
+    display: flex;
+    gap: 1px;
+    white-space: nowrap;
+    position: relative;
+    transition: transform 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
+}
+
+.move {
+    transform: translateY(-100%);
+}
+
+.tick-hidden {
+    opacity: 0;
+}
+
+.tick-blink {
+    animation: blink 0.3s ease-in-out;
+}
+
+@keyframes blink {
+    0% { opacity: 1; }
+    50% { opacity: 0.3; }
+    100% { opacity: 1; }
+}
+
+/* date and timezone badge - 1.5x larger with GMT */
+.date-display {
+    font-size: 2.1rem;
+    font-weight: 400;
+    color: #ffffff;
+    letter-spacing: 1px;
+    font-family: 'Inter', 'SF Pro Text', sans-serif;
+    text-transform: uppercase;
+    opacity: 0.9;
+    margin-left: 6px;
+    max-width: 90%;
+    width: fit-content;
+    padding-right: 10px;
+}
+
+.date-display span {
+    font-weight: 400;
+    color: #ffffff;
+    opacity: 0.7;
+    margin-left: 10px;
+}
+
+/* ----- weather panel - date on one line ----- */
+.weather-header {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 4px;
+    border-bottom: 1px solid #333333;
+    padding-bottom: 3px;
+}
+
+.weather-icon {
+    font-size: 3.2rem;
+    line-height: 1;
+    filter: drop-shadow(0 0 8px rgba(255,255,255,0.2));
+}
+
+.weather-location {
+    font-size: 1.15rem;
+    font-weight: 500;
+    color: #ffffff;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.weather-temp-large {
+    font-size: 3.44rem;
+    font-weight: 600;
+    color: #ffffff;
+    line-height: 1.1;
+}
+
+.weather-temps {
+    display: flex;
+    gap: 8px;
+    margin: 2px 0;
+    font-size: 1.15rem;
+}
+
+.temp-high, .temp-low {
+    color: #ffffff;
+}
+
+.temp-low {
+    opacity: 0.7;
+}
+
+.weather-error {
+    color: #f9b8b8;
+    text-align: center;
+    padding: 10px;
+    font-size: 1.2rem;
+    background: rgba(249, 184, 184, 0.1);
+    border-radius: 8px;
+    margin: 4px 0;
+    white-space: pre-wrap;
+    font-family: monospace;
+    border: 1px solid #f9b8b8;
+}
+
+.forecast-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    margin-top: 2px;
+}
+
+.forecast-day {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 2px 0;
+    border-bottom: 1px solid #333333;
+    font-size: 1.25rem;
+    line-height: 1.2;
+    min-height: 28px;
+}
+
+.forecast-day:first-child {
+    padding: 2px 0;
+}
+
+.forecast-date {
+    color: #ffffff;
+    font-weight: 500;
+    font-size: 1.15rem;
+    min-width: 100px;
+}
+
+.forecast-icon {
+    font-size: 1.8rem;
+    text-align: center;
+    min-width: 40px;
+}
+
+.forecast-high {
+    color: #ffffff;
+    font-size: 1.15rem;
+    min-width: 45px;
+    text-align: right;
+}
+
+.forecast-low {
+    color: #ffffff;
+    font-size: 1.15rem;
+    min-width: 45px;
+    text-align: right;
+    opacity: 0.7;
+}
+
+/* ----- calendar panel - 1.25x LARGER FONTS ----- */
+.calendar-header {
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: #ffffff;
+    padding-bottom: 4px;
+    margin-bottom: 4px;
+    border-bottom: 1px solid #333333;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-shrink: 0;
+}
+
+.calendar-header span {
+    font-size: 1.8rem;
+}
+
+.calendar-days {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    color: #ffffff;
+}
+
+.calendar-days > div[style*="color: #b3e2f9"] {
+    font-size: 1.15rem !important;
+    margin-top: 2px !important;
+    margin-bottom: 1px !important;
+    padding-bottom: 1px !important;
+    border-bottom-width: 1px !important;
+}
+
+.calendar-event-item {
+    padding: 2px 0 2px 0 !important;
+    font-size: 1.05rem;
+    line-height: 1.2;
+    border-bottom: none !important;
+    margin-bottom: 0 !important;
+}
+
+.calendar-event-item > div:first-of-type {
+    margin-bottom: 0 !important;
+}
+
+.calendar-event-item span[style*="font-weight: 500"] {
+    font-size: 1.05rem;
+}
+
+.calendar-event-item span[style*="color: #888"] {
+    font-size: 0.95rem;
+}
+
+.calendar-event-item div[style*="color: #666"] {
+    font-size: 0.9rem !important;
+    margin-top: 0 !important;
+    line-height: 1.2;
+}
+
+.calendar-event-item[style*="background"] {
+    background: transparent !important;
+}
+
+.calendar-event-item:not(:last-child) {
+    border-bottom: 1px solid rgba(51, 51, 51, 0.2) !important;
+    padding-bottom: 2px !important;
+    margin-bottom: 1px !important;
+}
+
+.calendar-event-item[style*="border-left"] {
+    border-left: 2px solid #b3e2f9 !important;
+    padding-left: 5px !important;
+}
+
+.calendar-error {
+    color: #f9b8b8;
+    padding: 10px;
+    text-align: center;
+    background: rgba(249, 184, 184, 0.1);
+    border-radius: 8px;
+    font-family: monospace;
+    white-space: pre-wrap;
+    border: 1px solid #f9b8b8;
+    font-size: 1.05rem;
+    line-height: 1.2;
+}
+
+/* ----- news ticker - 2x BIGGER ----- */
+.news-ticker-container {
+    width: 100%;
+    overflow: hidden;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.02) 10%, rgba(255,255,255,0.02) 90%, transparent);
+    height: 80px; /* Increased from 60px to accommodate larger text */
+    display: flex;
+    align-items: center;
+}
+
+.news-ticker {
+    display: inline-flex;
+    align-items: center;
+    white-space: nowrap;
+    animation: ticker 480s linear infinite; /* Slowed down to compensate for larger text */
+    font-size: 1.9rem; /* 0.95rem * 2 = 1.9rem */
+    color: #ffffff;
+    padding-left: 15px;
+    gap: 50px; /* Increased gap */
+    will-change: transform;
+    backface-visibility: hidden;
+    transform: translateZ(0);
+}
+
+.news-ticker:hover {
+    animation-play-state: paused;
+}
+
+@keyframes ticker {
+    0% { transform: translateX(100vw); }
+    100% { transform: translateX(-100%); }
+}
+
+.news-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 15px; /* Increased gap */
+    background: #000000;
+    padding: 8px 30px; /* Increased padding */
+    border-radius: 50px; /* Larger radius */
+    border-left: 4px solid #ffffff; /* Thicker border */
+    max-width: 1200px; /* Increased max-width */
+    border: 2px solid #333333; /* Thicker border */
+}
+
+.news-category {
+    background: #111111;
+    padding: 6px 20px; /* Increased padding */
+    border-radius: 40px; /* Larger radius */
+    font-size: 1.4rem; /* 0.7rem * 2 = 1.4rem */
+    font-weight: 600;
+    text-transform: uppercase;
+    color: #b3e2f9;
+    letter-spacing: 1px;
+    white-space: nowrap;
+    border: 2px solid #333333;
+}
+
+.news-headline {
+    font-weight: 400;
+    color: #ffffff;
+    font-size: 1.8rem; /* 0.9rem * 2 = 1.8rem */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 700px; /* Increased max-width */
+}
+
+.news-timestamp {
+    color: #888;
+    font-size: 1.5rem; /* 0.75rem * 2 = 1.5rem */
+    font-family: 'SF Mono', monospace;
+    padding: 4px 15px; /* Increased padding */
+    background: rgba(255,255,255,0.05);
+    border-radius: 30px; /* Larger radius */
+    white-space: nowrap;
+}
+
+.news-badge {
+    background: #000000;
+    padding: 6px 25px; /* Increased padding */
+    border-radius: 40px; /* Larger radius */
+    font-size: 1.6rem; /* 0.8rem * 2 = 1.6rem */
+    font-weight: 500;
+    color: #b3e2f9;
+    border: 2px solid #333333;
+    margin-right: 30px; /* Increased margin */
+    white-space: nowrap;
+}
+
+.news-error {
+    color: #f9b8b8;
+    padding: 15px; /* Increased padding */
+    font-size: 1.7rem; /* 0.85rem * 2 = 1.7rem */
+    white-space: nowrap;
+}
+
+.news-category.politics { color: #ff6b6b; }
+.news-category.sport { color: #4ecdc4; }
+.news-category.travel { color: #ffe66d; }
+.news-category.breaking { color: #ff9f1c; }
+.news-category.weather { color: #74b9ff; }
+.news-category.business { color: #a8e6cf; }
+.news-category.trump { color: #ff8a5c; }
+
+/* ----- status & debug - HIDDEN ----- */
+.config-status, .debug-info {
+    display: none;
+}
