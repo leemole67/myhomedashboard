@@ -1,0 +1,32 @@
+# Home Dashboard Configuration
+# Format: KEY=VALUE (lines starting with # are comments)
+
+#TIME & DATE
+TIMEZONE=GMT+0
+
+#LOCATION
+LOCATION=CRAWLEY, WEST SUSSEX, ENGLAND
+
+#UNITS
+TEMPERATURE_UNIT=C
+
+#NEWS
+NEWSTICKER=https://feeds.bbci.co.uk/news/uk/rss.xml
+
+#CALENDAR
+CALENDAR1=https://p44-caldav.icloud.com/published/2/MTc4MzcwMjQyMTc4MzcwMgyBTCt4sz98LwWnHye9GIpJ-CS3uS3JJkotbqT57-bhb-ZO2TZAnOYr33_EYuw1xLNOyTDxc6c9YH9d0knvrXs
+CALENDARHEADER=MOLEYS AGENDA
+CALENDAR_DAYS=14
+CALENDAR_REFRESH=30
+
+#WEATHER
+OPENWEATHER_API_KEY=a3d85023f553cfb09b1aa6979d90b884
+
+#CATEGORIES
+POLITICS=politics
+SPORT=sport
+TRAVEL=travel
+BREAKING=breaking
+WEATHER=weather
+BUSINESS=business
+TRUMP=trump
